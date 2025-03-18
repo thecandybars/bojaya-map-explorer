@@ -35,31 +35,28 @@ const MapExplorer = () => {
     { id: 2, img: mapaImg2, name: "Mapa Detallado", imgHD: mapaImg2 }
   ];
   
-  // Available audios
+  // Available audios - import directly for proper asset handling
+  import baldoloinoAudio from './assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3';
+  import patrickAudio from './assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3';
+  
   const audios = [
     {
       id: 1,
       title: "Memorias del Bojayá",
       artist: "Comunidad de Bojayá",
-      path: import.meta.env.DEV 
-        ? "/src/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3" 
-        : "/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3"
+      path: baldoloinoAudio
     },
     {
       id: 2,
       title: "Voces del Atrato",
       artist: "Cantadores tradicionales",
-      path: import.meta.env.DEV 
-        ? "/src/assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3"
-        : "/assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3"
+      path: patrickAudio
     },
     {
       id: 3,
       title: "Alabaos: Cantos de memoria",
       artist: "Cantadoras de Bojayá",
-      path: import.meta.env.DEV 
-        ? "/src/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3" 
-        : "/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3"
+      path: baldoloinoAudio
     }
   ];
   
