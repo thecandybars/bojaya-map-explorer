@@ -1,0 +1,369 @@
+import React, { useState, useRef, useEffect } from 'react';
+import mapaImg1 from './assets/images/1.jpg';
+import mapaImg2 from './assets/images/2.jpg';
+import { AudioPlayer } from './components/AudioPlayer';
+import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { theme } from './constants/theme';
+import { categories } from './constants/categories';
+import { hotspots } from './constants/hotspots';
+import LeftPanel from './components/LeftPanel';
+import MapControls from './components/MapControls';
+import HotspotPopup from './components/HotspotPopup';
+import Legend from './components/Legend';
+import LoadingOverlay from './components/LoadingOverlay';
+import MapContainer from './components/MapContainer';
+
+const MapExplorer = () => {
+  // States for the interface
+  const [isLoading, setIsLoading] = useState(true);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [activeHotspot, setActiveHotspot] = useState(null);
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
+  const [showBibliography, setShowBibliography] = useState(false);
+  const [currentMapIndex, setCurrentMapIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1.5); // Starting with more zoom
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [mapSize, setMapSize] = useState({ width: 0, height: 0 });
+  
+  // Available maps
+  const maps = [
+    { id: 1, img: mapaImg1, name: "Plan Vivo de Memoria y Paisaje", imgHD: mapaImg1 }, // Aquí deberías cambiar mapaImg1 por tu imagen HD cuando la tengas disponible
+    { id: 2, img: mapaImg2, name: "Mapa Detallado", imgHD: mapaImg2 }
+  ];
+  
+  // Available audios
+  const audios = [
+    {
+      id: 1,
+      title: "Memorias del Bojayá",
+      artist: "Comunidad de Bojayá",
+      path: import.meta.env.DEV 
+        ? "/src/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3" 
+        : "/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3"
+    },
+    {
+      id: 2,
+      title: "Voces del Atrato",
+      artist: "Cantadores tradicionales",
+      path: import.meta.env.DEV 
+        ? "/src/assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3"
+        : "/assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3"
+    },
+    {
+      id: 3,
+      title: "Alabaos: Cantos de memoria",
+      artist: "Cantadoras de Bojayá",
+      path: import.meta.env.DEV 
+        ? "/src/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3" 
+        : "/assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3"
+    }
+  ];
+  
+  // Inicializar el reproductor de audio
+  const audioPlayer = useAudioPlayer(audios, audios[0]);
+  
+  // References
+  const mapRef = useRef(null);
+  const containerRef = useRef(null);
+  const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
+  const [[x, y], setXY] = useState([0, 0]);
+  
+  // Magnifier configuration
+  const magnifierSize = 150;
+  const magnification = 2;
+  
+  // Filter hotspots by active category
+  const filteredHotspots = activeCategory 
+    ? hotspots.filter(spot => spot.category === activeCategory)
+    : hotspots;
+
+  // Function to select a category and handle related actions
+  const selectCategory = (categoryId) => {
+    setActiveCategory(categoryId === 'all' ? null : categoryId);
+    
+    // If selecting a category, find the first point of that category
+    if (categoryId && categoryId !== 'all') {
+      const firstPoint = hotspots.find(spot => spot.category === categoryId);
+      if (firstPoint) {
+        // Set the hotspot active and zoom to it
+        setActiveHotspot(firstPoint.id);
+        zoomToPoint(firstPoint.position.x, firstPoint.position.y, 1.8);
+      }
+    } else {
+      // If deselecting or selecting "all", close the active popup
+      setActiveHotspot(null);
+      setZoomLevel(1.5);
+      zoomToPoint(40, 65, 1.5);
+    }
+  };
+
+  // Initialize with zoomed in view and centered
+  useEffect(() => {
+    if (containerRef.current && mapRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      const containerHeight = containerRef.current.clientHeight;
+      
+      // Center point - Bojayá area
+      const focusPoint = { x: 40, y: 65 };
+      
+      // Calculate image real size when loaded
+      const img = new Image();
+      img.onload = () => {
+        setMapSize({
+          width: img.width,
+          height: img.height
+        });
+        
+        // Ajustar para que la imagen esté alineada correctamente cuando el menú está abierto
+        const menuWidth = 400; // Ancho del panel lateral
+        let initialX = 0;
+
+        if (showLeftPanel) {
+          // Si el panel está abierto, ajusta la posición para compensar
+          initialX = menuWidth / 2;
+        }
+        
+        // Set initial position with adjusted X and centered vertical position
+        // Ajustamos el zoom inicial para que sea más cómodo navegar
+        setPanPosition({ x: initialX, y: -200 }); // Movemos un poco hacia abajo para ver mejor la parte superior
+        setZoomLevel(1.0); // Zoom más alejado para mejor navegación
+      };
+      img.src = maps[currentMapIndex].imgHD || maps[currentMapIndex].img;
+    }
+    
+    // Set loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [showLeftPanel]); // Añadir showLeftPanel como dependencia
+
+  // Ajustar posición horizontal cuando el panel lateral cambia
+  useEffect(() => {
+    if (containerRef.current && mapRef.current) {
+      const menuWidth = 400; // Ancho del panel lateral
+      let adjustedX = panPosition.x;
+      
+      if (showLeftPanel) {
+        // Cuando el menú se abre, mueve la imagen a la derecha
+        adjustedX = menuWidth / 2;
+      } else {
+        // Cuando el menú se cierra, centra la imagen
+        adjustedX = 0;
+      }
+      
+      setPanPosition(prev => ({ x: adjustedX, y: prev.y }));
+    }
+  }, [showLeftPanel]);
+
+  // Zoom and navigation handlers
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.2, 4));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+  };
+  
+  // Function to zoom to a specific point
+  const zoomToPoint = (x, y, level = 2) => {
+    if (containerRef.current && mapRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+      
+      // Calculate the center position of the container
+      const centerX = containerWidth / 2;
+      const centerY = containerHeight / 2;
+      
+      // Calculate coordinates of the point in relation to the image
+      const pointX = (x / 100) * mapRef.current.offsetWidth;
+      const pointY = (y / 100) * mapRef.current.offsetHeight;
+      
+      // Calculate the displacement needed to center the point
+      const newPanX = centerX - (pointX * level);
+      // Restrict horizontal movement (optional, remove if you want full horizontal freedom)
+      // const newPanY = centerY - (pointY * level);
+      
+      // Only allow vertical panning
+      const newPanY = Math.min(centerY - (pointY * level), 0);
+      
+      // Animate the zoom and displacement
+      setZoomLevel(level);
+      
+      // Smoothly animate the movement to the point
+      setPanPosition({ x: newPanX, y: newPanY });
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.button === 0) { // Only with left button
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - panPosition.x,
+        y: e.clientY - panPosition.y
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && containerRef.current && mapRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const mapRect = mapRef.current.getBoundingClientRect();
+      
+      // Calculate movement limits
+      const maxX = containerRect.width;
+      const minX = containerRect.width - (mapRect.width * zoomLevel);
+      const maxY = containerRect.height;
+      const minY = containerRect.height - (mapRect.height * zoomLevel);
+      
+      // New coordinates
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      
+      // Mantener posición X fija (bloqueo horizontal)
+      // Para imágenes de alta resolución, usamos posición horizontal centralizada
+      const menuWidth = 400; // Ancho del panel lateral
+      const fixedX = showLeftPanel ? menuWidth / 2 : 0; // Ajustar si el panel está abierto
+      
+      // Aplicar solo movimiento vertical
+      // Damos más margen para desplazamiento vertical por la altura de la imagen
+      const verticalPadding = 400; // Mayor margen para la imagen alta
+      setPanPosition({ 
+        x: fixedX, // Posición horizontal fija
+        y: Math.min(Math.max(newY, minY - verticalPadding), verticalPadding) // Solo movimiento vertical
+      });
+    }
+
+    // Update position for the magnifier
+    if (showMagnifier && mapRef.current) {
+      const rect = mapRef.current.getBoundingClientRect();
+      const newX = e.clientX - rect.left;
+      const newY = e.clientY - rect.top;
+      setXY([newX, newY]);
+      setSize([rect.width, rect.height]);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Handler for mouseenter (magnifier)
+  const handleMouseEnter = () => {
+    if (showMagnifier && mapRef.current) {
+      const { width, height } = mapRef.current.getBoundingClientRect();
+      setSize([width, height]);
+    }
+  };
+
+  return (
+    <div className="map-container" style={{ 
+      fontFamily: theme.fonts.primary,
+      width: '100%',
+      height: '100vh',
+      overflow: 'hidden',
+      position: 'relative',
+      color: 'white',
+      backgroundColor: theme.colors.mapBackground,
+      backgroundImage: theme.gradients.mapBackground
+    }}>
+      {/* Main map container */}
+      <div 
+        style={{
+          width: '100%',
+          height: `calc(100vh - ${audioPlayer.isAudioPlayerExpanded ? '300px' : '100px'})`,
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'height 0.5s ease'
+        }}
+      >
+        <MapContainer
+          containerRef={containerRef}
+          mapRef={mapRef}
+          maps={maps}
+          currentMapIndex={currentMapIndex}
+          isLoading={isLoading}
+          zoomLevel={zoomLevel}
+          panPosition={panPosition}
+          filteredHotspots={filteredHotspots}
+          categories={categories}
+          activeHotspot={activeHotspot}
+          setActiveHotspot={setActiveHotspot}
+          isDragging={isDragging}
+          showMagnifier={showMagnifier}
+          magnifierSize={magnifierSize}
+          magnification={magnification}
+          imgWidth={imgWidth}
+          imgHeight={imgHeight}
+          x={x}
+          y={y}
+          showLeftPanel={showLeftPanel}
+          handleMouseDown={handleMouseDown}
+          handleMouseMove={handleMouseMove}
+          handleMouseUp={handleMouseUp}
+          handleMouseEnter={handleMouseEnter}
+        />
+        
+        <HotspotPopup 
+          activeHotspot={activeHotspot} 
+          setActiveHotspot={setActiveHotspot} 
+          hotspots={hotspots}
+          categories={categories}
+          theme={theme}
+        />
+        
+        <LeftPanel 
+          showLeftPanel={showLeftPanel}
+          setShowLeftPanel={setShowLeftPanel}
+          categories={categories}
+          activeCategory={activeCategory}
+          selectCategory={selectCategory}
+          maps={maps}
+          currentMapIndex={currentMapIndex}
+          setCurrentMapIndex={setCurrentMapIndex}
+          theme={theme}
+          setShowBibliography={setShowBibliography}
+        />
+        
+        <MapControls 
+          showLeftPanel={showLeftPanel}
+          setShowLeftPanel={setShowLeftPanel}
+          showMagnifier={showMagnifier}
+          setShowMagnifier={setShowMagnifier}
+          showLegend={showLegend}
+          setShowLegend={setShowLegend}
+          showBibliography={showBibliography}
+          setShowBibliography={setShowBibliography}
+          handleZoomIn={handleZoomIn}
+          handleZoomOut={handleZoomOut}
+          zoomToPoint={zoomToPoint}
+          theme={theme}
+        />
+
+        <Legend 
+          showLegend={showLegend}
+          setShowLegend={setShowLegend}
+          categories={categories}
+          theme={theme}
+        />
+
+        <LoadingOverlay isLoading={isLoading} theme={theme} />
+      </div>
+
+      {/* Reproductor de Audio */}
+      <AudioPlayer 
+        audioPlayer={audioPlayer}
+        theme={theme}
+        audios={audios}
+        containerRef={containerRef}
+      />
+    </div>
+  );
+};
+
+export default MapExplorer;
