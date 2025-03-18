@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import mapaImg1 from './assets/images/1.jpg';
 import mapaImg2 from './assets/images/2.jpg';
+import baldoloinoAudio from './assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3';
+import patrickAudio from './assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3';
 import { AudioPlayer } from './components/AudioPlayer';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { theme } from './constants/theme';
@@ -35,10 +37,7 @@ const MapExplorer = () => {
     { id: 2, img: mapaImg2, name: "Mapa Detallado", imgHD: mapaImg2 }
   ];
   
-  // Available audios - import directly for proper asset handling
-  import baldoloinoAudio from './assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3';
-  import patrickAudio from './assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3';
-  
+  // Available audios
   const audios = [
     {
       id: 1,
