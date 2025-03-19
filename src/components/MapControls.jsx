@@ -38,8 +38,8 @@ const MapControls = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(31, 41, 55, 0.6)',
-              color: 'white',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: theme.colors.accent,
               border: 'none',
               cursor: 'pointer',
               boxShadow: theme.shadows.md,
@@ -61,11 +61,11 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: showMagnifier ? 'rgba(31, 41, 55, 0.8)' : 'rgba(31, 41, 55, 0.6)',
-            color: showMagnifier ? '#E9A668' : 'white',
+            backgroundColor: showMagnifier ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: showMagnifier ? `1px solid ${theme.colors.accent}33` : 'none',
             cursor: 'pointer',
-            boxShadow: showMagnifier ? `${theme.shadows.md}, 0 0 15px rgba(233, 166, 104, 0.2)` : theme.shadows.md,
+            boxShadow: showMagnifier ? `${theme.shadows.md}, 0 0 15px ${theme.colors.accent}50` : theme.shadows.md,
             transition: 'all 150ms ease'
           }}
           title="Lupa"
@@ -83,11 +83,11 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: showLegend ? 'rgba(31, 41, 55, 0.8)' : 'rgba(31, 41, 55, 0.6)',
-            color: showLegend ? '#E9A668' : 'white',
+            backgroundColor: showLegend ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: showLegend ? `1px solid ${theme.colors.accent}33` : 'none',
             cursor: 'pointer',
-            boxShadow: showLegend ? `${theme.shadows.md}, 0 0 15px rgba(233, 166, 104, 0.2)` : theme.shadows.md,
+            boxShadow: showLegend ? `${theme.shadows.md}, 0 0 15px ${theme.colors.accent}50` : theme.shadows.md,
             transition: 'all 150ms ease'
           }}
           title="Convenciones"
@@ -105,11 +105,11 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: showBibliography ? 'rgba(31, 41, 55, 0.8)' : 'rgba(31, 41, 55, 0.6)',
-            color: showBibliography ? '#E9A668' : 'white',
+            backgroundColor: showBibliography ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: showBibliography ? `1px solid ${theme.colors.accent}33` : 'none',
             cursor: 'pointer',
-            boxShadow: showBibliography ? `${theme.shadows.md}, 0 0 15px rgba(233, 166, 104, 0.2)` : theme.shadows.md,
+            boxShadow: showBibliography ? `${theme.shadows.md}, 0 0 15px ${theme.colors.accent}50` : theme.shadows.md,
             transition: 'all 150ms ease'
           }}
           title="Información"
@@ -131,12 +131,12 @@ const MapControls = ({
         <button 
           onClick={handleZoomIn}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.8)';
-            e.currentTarget.style.color = '#E9A668';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.6)';
-            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           style={{
             width: '48px',
@@ -145,8 +145,8 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(31, 41, 55, 0.6)',
-            color: 'white',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: 'none',
             cursor: 'pointer',
             boxShadow: theme.shadows.md,
@@ -160,12 +160,12 @@ const MapControls = ({
         <button 
           onClick={handleZoomOut}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.8)';
-            e.currentTarget.style.color = '#E9A668';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.6)';
-            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           style={{
             width: '48px',
@@ -174,8 +174,8 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(31, 41, 55, 0.6)',
-            color: 'white',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: 'none',
             cursor: 'pointer',
             boxShadow: theme.shadows.md,
@@ -189,12 +189,12 @@ const MapControls = ({
         <button 
           onClick={() => zoomToPoint(40, 65, 1.5)}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.8)';
-            e.currentTarget.style.color = '#E9A668';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(31, 41, 55, 0.6)';
-            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            e.currentTarget.style.color = theme.colors.accent;
           }}
           style={{
             width: '48px',
@@ -203,8 +203,8 @@ const MapControls = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(31, 41, 55, 0.6)',
-            color: 'white',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: theme.colors.accent,
             border: 'none',
             cursor: 'pointer',
             boxShadow: theme.shadows.md,

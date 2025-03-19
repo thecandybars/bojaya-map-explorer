@@ -66,7 +66,7 @@ export const AudioPlayer = ({
       right: 0,
       bottom: 0,
       height: audioPlayerHeight,
-      backgroundColor: 'rgba(17, 24, 39, 0.9)',
+      backgroundColor: 'rgba(0, 0, 0, 0.65)',
       backdropFilter: 'blur(20px)',
       boxShadow: '0 -10px 25px rgba(0, 0, 0, 0.2)',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
@@ -89,7 +89,7 @@ export const AudioPlayer = ({
           style={{
             height: '100%',
             width: `${audioProgress}%`,
-            background: `linear-gradient(to right, ${theme.colors.accent}, #F59E0B)`,
+            background: `linear-gradient(to right, ${theme.colors.accent}, ${theme.colors.accent})`,
             transition: 'width 0.1s linear'
           }}
         />
@@ -132,7 +132,7 @@ export const AudioPlayer = ({
                 width: '56px',
                 height: '56px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(55, 65, 81, 0.8), rgba(31, 41, 55, 1))',
+                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -193,7 +193,7 @@ export const AudioPlayer = ({
             <div style={{
               position: 'absolute',
               inset: '10px 10px 10px 0',
-              background: 'rgba(17, 24, 39, 0.5)',
+              background: 'rgba(0, 0, 0, 0.5)',
               borderRadius: '8px',
               overflow: 'hidden',
               boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.3)',
@@ -310,8 +310,8 @@ export const AudioPlayer = ({
                     padding: '16px',
                     borderRadius: '12px',
                     background: currentAudio.id === audio.id 
-                      ? 'rgba(55, 65, 81, 0.9)'
-                      : 'rgba(31, 41, 55, 0.5)',
+                      ? 'rgba(0, 0, 0, 0.9)'
+                      : 'rgba(0, 0, 0, 0.5)',
                     cursor: 'pointer',
                     transition: 'all 150ms ease',
                     border: currentAudio.id === audio.id
@@ -327,7 +327,7 @@ export const AudioPlayer = ({
                     width: '36px',
                     height: '36px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, rgba(75, 85, 99, 0.8), rgba(55, 65, 81, 1))',
+                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

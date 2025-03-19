@@ -1,5 +1,6 @@
 import React from 'react';
 import { CategoryIcon } from '../categoryicon';
+import { theme } from '../constants/theme';
 
 const MapContainer = ({
   containerRef,
@@ -35,6 +36,7 @@ const MapContainer = ({
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
+        background: theme.colors.dark,
         transition: 'height 0.5s ease'
       }}
       onMouseDown={handleMouseDown}
@@ -85,10 +87,16 @@ const MapContainer = ({
               width: '28px',
               height: '28px',
               borderRadius: '50%',
-              backgroundColor: categories.find(c => c.id === spot.category)?.color || '#E9A668',
+              backgroundColor: (() => {
+                  const category = categories.find(c => c.id === spot.category);
+                  return category ? category.color : theme.colors.accent;
+                })(),
               border: `2px solid rgba(255, 255, 255, ${activeHotspot === spot.id ? '1' : '0.9'})`,
               boxShadow: activeHotspot === spot.id 
-                ? '0 0 15px rgba(233, 166, 104, 0.5)' 
+                ? `0 0 15px ${(() => {
+                    const category = categories.find(c => c.id === spot.category);
+                    return category ? category.color : theme.colors.accent;
+                  })()}80` 
                 : '0 4px 6px rgba(0, 0, 0, 0.1)',
               cursor: 'pointer',
               zIndex: 20,
@@ -101,7 +109,11 @@ const MapContainer = ({
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)';
-              e.currentTarget.style.boxShadow = '0 0 15px rgba(233, 166, 104, 0.4)';
+              // Get the category color for the spot
+              const spotId = spot.id;
+              const category = categories.find(c => c.id === spot.category);
+              const color = category ? category.color : theme.colors.accent;
+              e.currentTarget.style.boxShadow = `0 0 15px ${color}80`;
             }}
             onMouseOut={(e) => {
               if (activeHotspot !== spot.id) {
@@ -141,7 +153,7 @@ const MapContainer = ({
             backgroundSize: `${imgWidth * magnification}px ${imgHeight * magnification}px`,
             // Calculate the background position to match the zoomed view
             backgroundPosition: `${-(x - containerRef.current?.getBoundingClientRect().left - panPosition.x) * magnification + magnifierSize / 2}px ${-(y - containerRef.current?.getBoundingClientRect().top - panPosition.y) * magnification + magnifierSize / 2}px`,
-            boxShadow: '0 10px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(233, 166, 104, 0.3)',
+            boxShadow: `0 10px 15px rgba(0, 0, 0, 0.3), 0 0 15px ${theme.colors.accent}80`,
             zIndex: 40,
             transform: 'translate(-50%, -50%)',
             transition: 'none' // Remove transition for instant tracking

@@ -273,8 +273,8 @@ const MapExplorer = () => {
       overflow: 'hidden',
       position: 'relative',
       color: 'white',
-      backgroundColor: theme.colors.mapBackground,
-      backgroundImage: theme.gradients.mapBackground
+      backgroundColor: '#000000',
+      backgroundImage: 'linear-gradient(to bottom, #000000, #000000)'
     }}>
       {/* Main map container */}
       <div 

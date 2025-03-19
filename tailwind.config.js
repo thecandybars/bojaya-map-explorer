@@ -7,19 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#396B53',
-        secondary: '#8BBDC9',
-        accent: '#E4BE76',
-        dark: '#1F3A2D',
-        light: '#F3F7F4',
+        primary: '#000000',
+        secondary: '#7CBBCD',
+        accent: '#64B0A4',
+        dark: '#000000',
+        light: '#FFFFFF',
       },
       backgroundColor: {
         'black/30': 'rgba(0, 0, 0, 0.3)',
-        'gray-900/95': 'rgba(17, 24, 39, 0.95)',
-        'gray-900/80': 'rgba(17, 24, 39, 0.8)',
-        'gray-800/50': 'rgba(31, 41, 55, 0.5)',
-        'gray-800/70': 'rgba(31, 41, 55, 0.7)',
-        'amber-900/90': 'rgba(120, 53, 15, 0.9)',
+        'black/95': 'rgba(0, 0, 0, 0.95)',
+        'black/80': 'rgba(0, 0, 0, 0.8)',
+        'black/50': 'rgba(0, 0, 0, 0.5)',
+        'black/70': 'rgba(0, 0, 0, 0.7)',
       },
       animation: {
         'ping': 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',

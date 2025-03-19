@@ -22,7 +22,7 @@ const LeftPanel = ({
         top: 0,
         bottom: 0,
         width: '400px', // Fixed width for the panel
-        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         backdropFilter: 'blur(4px)',
         zIndex: 20,
         transition: 'left 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -37,8 +37,8 @@ const LeftPanel = ({
       <div style={{ position: 'relative' }}>
         <h1 
           style={{ 
-            color: '#E9A668', 
-            fontSize: '22px', 
+            color: theme.colors.accent, 
+            fontSize: '20px', 
             marginTop: '10px',
             marginBottom: '24px',
             fontWeight: '700',
@@ -91,8 +91,8 @@ const LeftPanel = ({
               onClick={() => setCurrentMapIndex(index)}
               style={{
                 background: currentMapIndex === index 
-                  ? 'rgba(55, 65, 81, 0.8)' 
-                  : 'rgba(31, 41, 55, 0.5)',
+                  ? 'rgba(0, 0, 0, 0.8)' 
+                  : 'rgba(0, 0, 0, 0.5)',
                 border: currentMapIndex === index 
                   ? `1px solid ${theme.colors.accent}33`
                   : '1px solid rgba(255, 255, 255, 0.05)',
@@ -152,8 +152,8 @@ const LeftPanel = ({
               onClick={() => selectCategory(category.id)}
               style={{
                 background: activeCategory === category.id 
-                  ? 'rgba(55, 65, 81, 0.8)' 
-                  : 'rgba(31, 41, 55, 0.5)',
+                  ? 'rgba(0, 0, 0, 0.8)' 
+                  : 'rgba(0, 0, 0, 0.5)',
                 border: activeCategory === category.id 
                   ? `1px solid ${category.color}33`
                   : '1px solid rgba(255, 255, 255, 0.05)',
@@ -220,7 +220,7 @@ const LeftPanel = ({
         style={{
           marginTop: 'auto',
           padding: '12px 16px',
-          background: 'rgba(31, 41, 55, 0.7)',
+          background: 'rgba(0, 0, 0, 0.7)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: '8px',
           color: 'white',
@@ -234,7 +234,7 @@ const LeftPanel = ({
         }}
       >
         <svg 
-xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={theme.colors.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
         <span>Referencias bibliográficas</span>
       </button>
     </div>

@@ -21,17 +21,18 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
       maxWidth: '95vw',
       maxHeight: '80vh',
       overflowY: 'auto',
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: 'rgba(0, 0, 0, 0.85)',
       backdropFilter: 'blur(16px)',
       borderRadius: '16px',
       boxShadow: theme.shadows.xl,
       overflow: 'hidden',
       transition: 'all 300ms ease',
       animation: 'fadeIn 0.5s ease-out',
-      fontFamily: theme.fonts.primary
+      fontFamily: theme.fonts.primary,
+      color: 'white'
     }}>
       <div style={{ 
-        borderLeft: `5px solid ${category?.color || theme.colors.accent}`,
+        borderLeft: `5px solid ${category ? category.color : theme.colors.accent}`,
         padding: '28px 24px'
       }}>
         <div style={{ position: 'relative' }}>
@@ -40,8 +41,8 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
             position: 'absolute',
             top: '-48px',
             left: '-28px',
-            backgroundColor: category?.color || theme.colors.accent,
-            color: '#111827',
+            backgroundColor: category ? category.color : theme.colors.accent,
+            color: 'white',
             padding: '8px 16px',
             borderRadius: '0 9999px 9999px 0',
             fontSize: '12px',
@@ -53,7 +54,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
             {/* Add category icon */}
             <CategoryIcon 
               category={hotspot.category} 
-              color="#111827" 
+              color="white" 
               size={14} 
             />
             {category?.name || 'General'}
@@ -61,7 +62,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
             <h2 style={{ 
-              color: '#111827', 
+              color: category ? category.color : theme.colors.accent, 
               margin: 0, 
               fontSize: '24px', 
               fontWeight: '700',
@@ -76,7 +77,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
                 border: 'none',
                 padding: '4px',
                 cursor: 'pointer',
-                color: '#6B7280',
+                color: 'white',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -93,7 +94,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
           </div>
           
           <p style={{ 
-            color: '#4B5563', 
+            color: 'white', 
             marginTop: '12px', 
             marginBottom: '20px', 
             lineHeight: '1.6',
@@ -105,11 +106,11 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
           {/* Details section */}
           <div style={{ 
             marginTop: '24px',
-            borderTop: '1px solid #E5E7EB',
+            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
             paddingTop: '20px'
           }}>
             <h3 style={{ 
-              color: '#111827', 
+              color: category ? category.color : theme.colors.accent, 
               fontSize: '16px', 
               fontWeight: '600',
               marginTop: 0,
@@ -122,7 +123,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
               {hotspot.details.map((detail, index) => (
                 <div key={index} style={{ marginBottom: '4px' }}>
                   <h4 style={{ 
-                    color: '#111827', 
+                    color: 'white', 
                     margin: '0 0 4px 0', 
                     fontSize: '14px', 
                     fontWeight: '600' 
@@ -130,7 +131,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
                     {detail.title}
                   </h4>
                   <p style={{ 
-                    color: '#4B5563', 
+                    color: 'rgba(255, 255, 255, 0.8)', 
                     margin: 0, 
                     fontSize: '14px',
                     lineHeight: '1.5'

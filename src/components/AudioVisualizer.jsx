@@ -193,9 +193,9 @@ export const AudioVisualizer = ({
     
     // Gradiente para la forma de onda
     const waveGradient = canvasCtx.createLinearGradient(0, 0, canvas.width, 0);
-    waveGradient.addColorStop(0, '#426D5A');
+    waveGradient.addColorStop(0, '#64B0A4');
     waveGradient.addColorStop(0.5, theme.colors.accent);
-    waveGradient.addColorStop(1, '#E9A668');
+    waveGradient.addColorStop(1, '#64B0A4');
     
     // Configurar estilo para la forma de onda
     canvasCtx.lineWidth = 2.5;
@@ -261,8 +261,8 @@ export const AudioVisualizer = ({
       const barGradient = canvasCtx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
       
       const intensity = freqValue / 255;
-      barGradient.addColorStop(0, `rgba(110, 231, 183, ${0.1 + intensity * 0.6})`);
-      barGradient.addColorStop(1, `rgba(66, 109, 90, ${0.05 + intensity * 0.3})`);
+      barGradient.addColorStop(0, `rgba(100, 176, 164, ${0.1 + intensity * 0.6})`);
+      barGradient.addColorStop(1, `rgba(100, 176, 164, ${0.05 + intensity * 0.3})`);
       
       canvasCtx.fillStyle = barGradient;
       
@@ -288,7 +288,7 @@ export const AudioVisualizer = ({
         top: 0,
         bottom: 0,
         width: `${audioProgress}%`,
-        background: 'linear-gradient(to right, rgba(110, 231, 183, 0.05), rgba(233, 166, 104, 0.05))',
+        background: 'linear-gradient(to right, rgba(100, 176, 164, 0.05), rgba(100, 176, 164, 0.05))',
         borderRight: `2px solid ${theme.colors.accent}`,
         boxShadow: `0 0 10px 1px ${theme.colors.accent}33`,
         zIndex: 1,

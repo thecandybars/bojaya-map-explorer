@@ -11,7 +11,7 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
       top: '24px', 
       right: '96px', 
       width: '320px', 
-      backgroundColor: 'rgba(17, 24, 39, 0.9)',
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
       backdropFilter: 'blur(10px)',
       borderRadius: '16px',
       boxShadow: theme.shadows.xl,
@@ -24,7 +24,7 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
           <h3 style={{ 
             fontSize: '18px', 
             fontWeight: '500', 
-            color: '#E5E7EB',
+            color: theme.colors.accent,
             margin: 0
           }}>
             Convenciones del Mapa
@@ -60,7 +60,7 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
                 gap: '16px', 
                 color: '#D1D5DB', 
                 padding: '10px 0',
-                borderBottom: '1px solid #374151'
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
               }}
             >
               <div style={{
@@ -73,7 +73,7 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
               }}>
                 <CategoryIcon 
                   category={category.id} 
-                  color={category.color || theme.colors.accent} 
+                  color={category.color} 
                   size={18} 
                 />
               </div>
