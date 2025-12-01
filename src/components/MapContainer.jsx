@@ -26,7 +26,8 @@ const MapContainer = ({
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
-  handleMouseEnter
+  handleMouseEnter,
+  handleWheel
 }) => {
   return (
     <div 
@@ -44,13 +45,14 @@ const MapContainer = ({
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onMouseEnter={handleMouseEnter}
+      onWheel={handleWheel}
     >
-      {/* Map with zoom and pan */}
+      {/* Map with pan only (zoom disabled) */}
       <div 
         className="zoom-transition"
         style={{ 
           position: 'absolute',
-          transform: `translate(${panPosition.x}px, ${panPosition.y}px) scale(${zoomLevel})`,
+          transform: `translate(${panPosition.x}px, ${panPosition.y}px) scale(1)`,
           transformOrigin: 'center',
           cursor: isDragging ? 'grabbing' : 'grab',
           userSelect: 'none',
@@ -64,9 +66,9 @@ const MapContainer = ({
           src={maps[currentMapIndex].imgHD || maps[currentMapIndex].img} /* Usar imagen HD si está disponible */
           alt={`${maps[currentMapIndex].name} - Plan Vivo de Memoria y Paisaje de Bojayá`}
           style={{ 
-            minWidth: '800px', 
-            minHeight: '600px',
-            maxWidth: 'none',
+            width: '100%',
+            height: 'auto',
+            maxWidth: '2000px',
             transition: 'opacity 0.7s ease',
             opacity: isLoading ? 0 : 1,
             userDrag: 'none',

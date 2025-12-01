@@ -2,6 +2,18 @@ import React from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { CategoryIcon } from '../categoryicon';
 
+// Category display names for buttons (matching popup names)
+const categoryDisplayNames = {
+  'memoria': 'ESCUELA',
+  'conmemorativo': 'IGLESIA',
+  'rituales': 'SENDERO',
+  'encuentros': 'TAMBOS',
+  'fortalecimiento': 'ANTIGUO CENTRO DE SALUD',
+  'promocion': 'PALACIO MUNICIPAL',
+  'museologia': 'CASA AGUSTINAS',
+  'articulacion': 'CANCHA Y SUS GRADAS'
+};
+
 const LeftPanel = ({ 
   showLeftPanel, 
   setShowLeftPanel, 
@@ -18,29 +30,36 @@ const LeftPanel = ({
     <div 
       style={{
         position: 'absolute',
-        left: showLeftPanel ? 0 : '-400px',
+        left: showLeftPanel ? 0 : '-100%',
         top: 0,
         bottom: 0,
-        width: '400px', // Fixed width for the panel
+        width: '100%',
+        maxWidth: '400px',
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         backdropFilter: 'blur(4px)',
         zIndex: 20,
         transition: 'left 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
-        padding: '24px',
+        padding: '16px',
         display: 'flex',
         flexDirection: 'column',
         boxShadow: '10px 0 30px rgba(0, 0, 0, 0.1)',
         borderRight: '1px solid rgba(255, 255, 255, 0.1)',
-        overflow: 'auto'
+        overflow: 'auto',
+        // Responsive adjustments
+        '@media (max-width: 768px)': {
+          width: '100vw',
+          maxWidth: 'none',
+          padding: '12px'
+        }
       }}
     >
       <div style={{ position: 'relative' }}>
         <h1 
           style={{ 
             color: theme.colors.accent, 
-            fontSize: '20px', 
+            fontSize: window.innerWidth <= 768 ? '18px' : '20px', 
             marginTop: '10px',
-            marginBottom: '24px',
+            marginBottom: window.innerWidth <= 768 ? '16px' : '24px',
             fontWeight: '700',
             letterSpacing: '0.01em',
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
@@ -131,88 +150,81 @@ const LeftPanel = ({
         </div>
       </div>
       
-      {/* Categories */}
-      <div>
-        <h2 style={{ 
-          fontSize: '16px', 
-          marginBottom: '16px',
-          fontWeight: '600',
-          color: '#E5E7EB'
-        }}>
-          Categorías
-        </h2>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px'
-        }}>
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => selectCategory(category.id)}
-              style={{
-                background: activeCategory === category.id 
-                  ? 'rgba(0, 0, 0, 0.8)' 
-                  : 'rgba(0, 0, 0, 0.5)',
-                border: activeCategory === category.id 
-                  ? `1px solid ${category.color}33`
-                  : '1px solid rgba(255, 255, 255, 0.05)',
-                borderLeft: activeCategory === category.id
-                  ? `4px solid ${category.color}`
-                  : '1px solid rgba(255, 255, 255, 0.05)',
-                borderRadius: '8px',
-                padding: '16px',
-                textAlign: 'left',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                transition: 'all 150ms ease'
-              }}
-            >
-              <div style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                backgroundColor: activeCategory === category.id ? category.color : 'rgba(255, 255, 255, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                transition: 'all 150ms ease'
-              }}>
-                <CategoryIcon 
-                  category={category.id} 
-                  color={activeCategory === category.id ? 'white' : category.color} 
-                  size={16} 
-                />
-              </div>
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                gap: '2px'
-              }}>
-                <span style={{ 
-                  color: 'white', 
-                  fontWeight: activeCategory === category.id ? '600' : '500',
-                  fontSize: '14px'
+      {/* Categories - Only show for first map (Bellavista Viejo) */}
+      {currentMapIndex === 0 && (
+        <div>
+          <h2 style={{ 
+            fontSize: '16px', 
+            marginBottom: '16px',
+            fontWeight: '600',
+            color: '#E5E7EB'
+          }}>
+            Categorías
+          </h2>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}>
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => selectCategory(category.id)}
+                style={{
+                  background: activeCategory === category.id 
+                    ? 'rgba(0, 0, 0, 0.8)' 
+                    : 'rgba(0, 0, 0, 0.5)',
+                  border: activeCategory === category.id 
+                    ? `1px solid ${category.color}33`
+                    : '1px solid rgba(255, 255, 255, 0.05)',
+                  borderLeft: activeCategory === category.id
+                    ? `4px solid ${category.color}`
+                    : '1px solid rgba(255, 255, 255, 0.05)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  transition: 'all 150ms ease'
+                }}
+              >
+                <div style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  backgroundColor: activeCategory === category.id ? category.color : 'rgba(255, 255, 255, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  transition: 'all 150ms ease'
                 }}>
-                  {category.name}
-                </span>
-                {category.description && (
+                  <CategoryIcon 
+                    category={category.id} 
+                    color={activeCategory === category.id ? 'white' : category.color} 
+                    size={16} 
+                  />
+                </div>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: '2px'
+                }}>
                   <span style={{ 
-                    color: '#9CA3AF',
-                    fontSize: '12px',
-                    fontWeight: '400'
+                    color: 'white', 
+                    fontWeight: activeCategory === category.id ? '600' : '500',
+                    fontSize: '14px'
                   }}>
-                    {category.description}
+                    {categoryDisplayNames[category.id] || category.name}
                   </span>
-                )}
-              </div>
-            </button>
-          ))}
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Bibliography button */}
       <button

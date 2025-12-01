@@ -12,18 +12,18 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
   
   return (
     <div style={{
-      position: 'fixed', // Changed from absolute to fixed for better positioning
+      position: 'fixed',
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
       zIndex: 30,
-      width: '450px',
+      width: window.innerWidth <= 768 ? '95vw' : '450px',
       maxWidth: '95vw',
       maxHeight: '80vh',
       overflowY: 'auto',
       background: 'rgba(0, 0, 0, 0.85)',
       backdropFilter: 'blur(16px)',
-      borderRadius: '16px',
+      borderRadius: window.innerWidth <= 768 ? '12px' : '16px',
       boxShadow: theme.shadows.xl,
       overflow: 'hidden',
       transition: 'all 300ms ease',
@@ -33,7 +33,7 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
     }}>
       <div style={{ 
         borderLeft: `5px solid ${category ? category.color : theme.colors.accent}`,
-        padding: '28px 24px'
+        padding: window.innerWidth <= 768 ? '20px 16px' : '28px 24px'
       }}>
         <div style={{ position: 'relative' }}>
           {/* Category tag */}
@@ -102,46 +102,6 @@ const HotspotPopup = ({ activeHotspot, setActiveHotspot, hotspots, categories, t
           }}>
             {hotspot.description}
           </p>
-          
-          {/* Details section */}
-          <div style={{ 
-            marginTop: '24px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-            paddingTop: '20px'
-          }}>
-            <h3 style={{ 
-              color: category ? category.color : theme.colors.accent, 
-              fontSize: '16px', 
-              fontWeight: '600',
-              marginTop: 0,
-              marginBottom: '16px' 
-            }}>
-              Detalles
-            </h3>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {hotspot.details.map((detail, index) => (
-                <div key={index} style={{ marginBottom: '4px' }}>
-                  <h4 style={{ 
-                    color: 'white', 
-                    margin: '0 0 4px 0', 
-                    fontSize: '14px', 
-                    fontWeight: '600' 
-                  }}>
-                    {detail.title}
-                  </h4>
-                  <p style={{ 
-                    color: 'rgba(255, 255, 255, 0.8)', 
-                    margin: 0, 
-                    fontSize: '14px',
-                    lineHeight: '1.5'
-                  }}>
-                    {detail.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -1,10 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import mapaImg1 from './assets/images/1.jpg';
-import mapaImg2 from './assets/images/2.jpg';
-import baldoloinoAudio from './assets/audio/BALDOLOINO_ESCALA-CARIBE-PACIFICO.mp3';
-import patrickAudio from './assets/audio/PATRICK-MORALES_ESCALA-CARIBE-PACÍFICO.mp3';
+import mapaImg1 from './assets/images/compressed/1-escala-caribe-pacifico.jpg';
+import mapaImg2 from './assets/images/compressed/2-escala-acuatica.jpg';
+import mapaImg3 from './assets/images/compressed/3-escala-circuito-memoria.jpg';
+import mapaImg4 from './assets/images/compressed/4-escala-bellavista-nuevo.jpg';
+import mapaImg5 from './assets/images/compressed/5-escala-bellavista-viejo.jpg';
+import map1Audio from './assets/audio/map1-audio.mp3';
+import map2Audio from './assets/audio/map2-audio.mp3';
+import map3Audio from './assets/audio/map3-audio.mp3';
+import map4Audio from './assets/audio/map4-audio.mp3';
+import map5Audio from './assets/audio/map5-audio.mp3';
 import { AudioPlayer } from './components/AudioPlayer';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { useResponsive } from './hooks/useResponsive';
 import { theme } from './constants/theme';
 import { categories } from './constants/categories';
 import { hotspots } from './constants/hotspots';
@@ -14,11 +21,15 @@ import HotspotPopup from './components/HotspotPopup';
 import Legend from './components/Legend';
 import LoadingOverlay from './components/LoadingOverlay';
 import MapContainer from './components/MapContainer';
+import './responsive.css';
 
 const MapExplorer = () => {
+  // Responsive hook
+  const { isMobile, isTablet, width } = useResponsive();
+  
   // States for the interface
   const [isLoading, setIsLoading] = useState(true);
-  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showLeftPanel, setShowLeftPanel] = useState(!isMobile);
   const [activeHotspot, setActiveHotspot] = useState(null);
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
@@ -33,34 +44,79 @@ const MapExplorer = () => {
   
   // Available maps
   const maps = [
-    { id: 1, img: mapaImg1, name: "Plan Vivo de Memoria y Paisaje", imgHD: mapaImg1 }, // Aquí deberías cambiar mapaImg1 por tu imagen HD cuando la tengas disponible
-    { id: 2, img: mapaImg2, name: "Mapa Detallado", imgHD: mapaImg2 }
+    { id: 5, img: mapaImg5, name: "Bellavista Viejo", imgHD: mapaImg5 },
+    { id: 1, img: mapaImg1, name: "Escala Caribe Pacífico", imgHD: mapaImg1 },
+    { id: 2, img: mapaImg2, name: "Escala Acuática", imgHD: mapaImg2 },
+    { id: 3, img: mapaImg3, name: "Circuito Memoria y Paisaje", imgHD: mapaImg3 },
+    { id: 4, img: mapaImg4, name: "Bellavista Nuevo", imgHD: mapaImg4 }
   ];
   
-  // Available audios
+  // Available audios - each map has its corresponding audio from its folder
   const audios = [
     {
+      id: 5,
+      title: "Bellavista Viejo",
+      artist: "Máxima Asprilla",
+      path: map5Audio
+    },
+    {
       id: 1,
-      title: "Memorias del Bojayá",
-      artist: "Comunidad de Bojayá",
-      path: baldoloinoAudio
+      title: "Escala Caribe Pacífico",
+      artist: "Baldoloino",
+      path: map1Audio
     },
     {
       id: 2,
-      title: "Voces del Atrato",
-      artist: "Cantadores tradicionales",
-      path: patrickAudio
+      title: "Escala Acuática", 
+      artist: "Patrick Morales",
+      path: map2Audio
     },
     {
       id: 3,
-      title: "Alabaos: Cantos de memoria",
-      artist: "Cantadoras de Bojayá",
-      path: baldoloinoAudio
+      title: "Circuito Memoria y Paisaje",
+      artist: "Heydi Embera", 
+      path: map3Audio
+    },
+    {
+      id: 4,
+      title: "Bellavista Nuevo",
+      artist: "Comunidad",
+      path: map4Audio
     }
   ];
   
   // Inicializar el reproductor de audio
   const audioPlayer = useAudioPlayer(audios, audios[0]);
+
+  // Change audio when map changes (without auto-play)
+  useEffect(() => {
+    const correspondingAudio = audios[currentMapIndex]; // Direct index mapping
+    console.log('Map index:', currentMapIndex, 'Audio:', correspondingAudio);
+    
+    if (correspondingAudio) {
+      console.log('Switching to audio:', correspondingAudio.title);
+      // Stop current audio if playing
+      if (audioPlayer.isAudioPlaying) {
+        audioPlayer.togglePlayPause();
+      }
+      // Change to corresponding audio without playing
+      audioPlayer.changeAudio(correspondingAudio);
+    }
+    
+    // Clear active category and hotspot when switching maps
+    setActiveCategory(null);
+    setActiveHotspot(null);
+  }, [currentMapIndex]);
+  
+  // Handle responsive behavior
+  useEffect(() => {
+    // Auto-close panel on mobile, auto-open on desktop
+    if (isMobile && showLeftPanel) {
+      setShowLeftPanel(false);
+    } else if (!isMobile && !isTablet && !showLeftPanel) {
+      setShowLeftPanel(true);
+    }
+  }, [isMobile, isTablet]);
   
   // References
   const mapRef = useRef(null);
@@ -72,28 +128,25 @@ const MapExplorer = () => {
   const magnifierSize = 150;
   const magnification = 2;
   
-  // Filter hotspots by active category
-  const filteredHotspots = activeCategory 
-    ? hotspots.filter(spot => spot.category === activeCategory)
-    : hotspots;
+  // Only show hotspots on the first map (Bellavista Viejo)
+  const filteredHotspots = currentMapIndex === 0 ? hotspots : [];
 
   // Function to select a category and handle related actions
   const selectCategory = (categoryId) => {
     setActiveCategory(categoryId === 'all' ? null : categoryId);
     
-    // If selecting a category, find the first point of that category
+    // If selecting a category, find the first point of that category and navigate to it
     if (categoryId && categoryId !== 'all') {
       const firstPoint = hotspots.find(spot => spot.category === categoryId);
       if (firstPoint) {
-        // Set the hotspot active and zoom to it
+        // Set the hotspot active and navigate to it (without zoom)
         setActiveHotspot(firstPoint.id);
-        zoomToPoint(firstPoint.position.x, firstPoint.position.y, 1.8);
+        // Navigate to point without changing zoom level
+        navigateToPoint(firstPoint.position.x, firstPoint.position.y);
       }
     } else {
       // If deselecting or selecting "all", close the active popup
       setActiveHotspot(null);
-      setZoomLevel(1.5);
-      zoomToPoint(40, 65, 1.5);
     }
   };
 
@@ -115,11 +168,11 @@ const MapExplorer = () => {
         });
         
         // Ajustar para que la imagen esté alineada correctamente cuando el menú está abierto
-        const menuWidth = 400; // Ancho del panel lateral
+        const menuWidth = isMobile ? 0 : 400; // Responsive menu width
         let initialX = 0;
 
-        if (showLeftPanel) {
-          // Si el panel está abierto, ajusta la posición para compensar
+        if (showLeftPanel && !isMobile) {
+          // Si el panel está abierto y no es móvil, ajusta la posición para compensar
           initialX = menuWidth / 2;
         }
         
@@ -138,35 +191,25 @@ const MapExplorer = () => {
     return () => clearTimeout(timer);
   }, [showLeftPanel]); // Añadir showLeftPanel como dependencia
 
-  // Ajustar posición horizontal cuando el panel lateral cambia
-  useEffect(() => {
-    if (containerRef.current && mapRef.current) {
-      const menuWidth = 400; // Ancho del panel lateral
-      let adjustedX = panPosition.x;
-      
-      if (showLeftPanel) {
-        // Cuando el menú se abre, mueve la imagen a la derecha
-        adjustedX = menuWidth / 2;
-      } else {
-        // Cuando el menú se cierra, centra la imagen
-        adjustedX = 0;
-      }
-      
-      setPanPosition(prev => ({ x: adjustedX, y: prev.y }));
-    }
-  }, [showLeftPanel]);
+  // Note: Removed automatic panel adjustment to allow free horizontal movement
 
-  // Zoom and navigation handlers
+  // Zoom functionality disabled
   const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 0.2, 4));
+    // Zoom functionality disabled
   };
 
   const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+    // Zoom functionality disabled
+  };
+
+  // Disable mouse wheel zoom
+  const handleWheel = (e) => {
+    e.preventDefault();
+    // Zoom functionality disabled
   };
   
-  // Function to zoom to a specific point
-  const zoomToPoint = (x, y, level = 2) => {
+  // Function to navigate to a specific point without zooming
+  const navigateToPoint = (x, y) => {
     if (containerRef.current && mapRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const containerWidth = containerRect.width;
@@ -176,24 +219,23 @@ const MapExplorer = () => {
       const centerX = containerWidth / 2;
       const centerY = containerHeight / 2;
       
-      // Calculate coordinates of the point in relation to the image
+      // Calculate coordinates of the point in relation to the image (at scale 1)
       const pointX = (x / 100) * mapRef.current.offsetWidth;
       const pointY = (y / 100) * mapRef.current.offsetHeight;
       
       // Calculate the displacement needed to center the point
-      const newPanX = centerX - (pointX * level);
-      // Restrict horizontal movement (optional, remove if you want full horizontal freedom)
-      // const newPanY = centerY - (pointY * level);
-      
-      // Only allow vertical panning
-      const newPanY = Math.min(centerY - (pointY * level), 0);
-      
-      // Animate the zoom and displacement
-      setZoomLevel(level);
+      const newPanX = centerX - pointX;
+      const newPanY = centerY - pointY;
       
       // Smoothly animate the movement to the point
       setPanPosition({ x: newPanX, y: newPanY });
     }
+  };
+
+  // Function to zoom to a specific point (kept for legacy compatibility)
+  const zoomToPoint = (x, y, level = 2) => {
+    // Zoom disabled, just navigate to point
+    navigateToPoint(x, y);
   };
 
   const handleMouseDown = (e) => {
@@ -234,17 +276,11 @@ const MapExplorer = () => {
       const newX = e.clientX - dragStart.x;
       const newY = e.clientY - dragStart.y;
       
-      // Mantener posición X fija (bloqueo horizontal)
-      // Para imágenes de alta resolución, usamos posición horizontal centralizada
-      const menuWidth = 400; // Ancho del panel lateral
-      const fixedX = showLeftPanel ? menuWidth / 2 : 0; // Ajustar si el panel está abierto
-      
-      // Aplicar solo movimiento vertical
-      // Damos más margen para desplazamiento vertical por la altura de la imagen
-      const verticalPadding = 400; // Mayor margen para la imagen alta
+      // Allow both horizontal and vertical movement with padding
+      const padding = 200; // Padding for better navigation
       setPanPosition({ 
-        x: fixedX, // Posición horizontal fija
-        y: Math.min(Math.max(newY, minY - verticalPadding), verticalPadding) // Solo movimiento vertical
+        x: Math.min(Math.max(newX, minX - padding), maxX + padding),
+        y: Math.min(Math.max(newY, minY - padding), maxY + padding)
       });
     }
   };
@@ -274,7 +310,9 @@ const MapExplorer = () => {
       position: 'relative',
       color: 'white',
       backgroundColor: '#000000',
-      backgroundImage: 'linear-gradient(to bottom, #000000, #000000)'
+      backgroundImage: 'linear-gradient(to bottom, #000000, #000000)',
+      // Responsive adjustments
+      minHeight: '100vh'
     }}>
       {/* Main map container */}
       <div 
@@ -311,6 +349,7 @@ const MapExplorer = () => {
           handleMouseMove={handleMouseMove}
           handleMouseUp={handleMouseUp}
           handleMouseEnter={handleMouseEnter}
+          handleWheel={handleWheel}
         />
         
         <HotspotPopup 

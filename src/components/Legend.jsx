@@ -8,18 +8,20 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
   return (
     <div style={{ 
       position: 'fixed', 
-      top: '24px', 
-      right: '96px', 
-      width: '320px', 
+      top: window.innerWidth <= 768 ? '12px' : '24px', 
+      right: window.innerWidth <= 768 ? '12px' : '96px', 
+      left: window.innerWidth <= 768 ? '12px' : 'auto',
+      width: window.innerWidth <= 768 ? 'auto' : '320px', 
+      maxWidth: window.innerWidth <= 768 ? 'calc(100vw - 24px)' : '320px',
       backgroundColor: 'rgba(0, 0, 0, 0.85)',
       backdropFilter: 'blur(10px)',
-      borderRadius: '16px',
+      borderRadius: window.innerWidth <= 768 ? '12px' : '16px',
       boxShadow: theme.shadows.xl,
       zIndex: 40,
       border: '1px solid rgba(255, 255, 255, 0.1)',
       fontFamily: theme.fonts.primary
     }}>
-      <div style={{ padding: '24px' }}>
+      <div style={{ padding: window.innerWidth <= 768 ? '16px' : '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <h3 style={{ 
             fontSize: '18px', 
@@ -75,6 +77,7 @@ const Legend = ({ showLegend, setShowLegend, categories, theme }) => {
                   category={category.id} 
                   color={category.color} 
                   size={18} 
+                  useFor="legend"
                 />
               </div>
               <div style={{ 

@@ -2,74 +2,61 @@ import { theme } from './theme';
 
 // Categories exactly matching the map legend
 export const categories = [
-  { 
-    id: 'all', 
-    name: 'Todos los puntos', 
-    color: theme.colors.primary,
-    icon: 'all',
-    description: 'Visualizar todos los puntos de interés'
-  },
+
   { 
     id: 'memoria', 
-    name: 'El lugar de memoria: El río Atrato', 
+    name: 'Conmemorativo', 
     color: theme.colors.memoriaColor,
     icon: 'memoria',
-    description: 'Cartografía participativa'
+    description: 'Se establecerán espacios para recordar y honrar a las víctimas, promoviendo la reflexión sobre su historia.'
   },
   { 
     id: 'conmemorativo', 
-    name: 'Conmemorativo', 
+    name: 'Rituales mortuorios', 
     color: theme.colors.conmemorativoColor,
     icon: 'conmemorativo',
-    description: 'Alabaos, Gualíes y Novenarios del 02 de Mayo'
+    description: 'Se fortalecerán los elementos culturales de los rituales mortuorios a través de la comunicación y el intercambio de experiencias'
   },
   { 
     id: 'rituales', 
-    name: 'Rituales Mortuorios', 
+    name: 'Fortalecimiento a procesos e iniciativas de memoria', 
     color: theme.colors.ritualesColor,
     icon: 'rituales',
-    description: 'Patrimonio inmaterial de la nación'
+    description: 'Se apoyarán y promoverán iniciativas locales que contribuyan a la memoria histórica'
   },
   { 
     id: 'encuentros', 
-    name: 'Espacios de encuentro', 
+    name: 'Comunicación y Memoria Histórica', 
     color: theme.colors.encuentrosColor,
     icon: 'encuentros',
-    description: 'Apoyo a organizaciones de procesos'
+    description: 'Se potenciarán los medios de comunicación para difundir la memoria histórica y las experiencias de las comunidades'
   },
   { 
     id: 'fortalecimiento', 
-    name: 'Fortalecimiento de experiencias', 
+    name: 'ANTIGUO CENTRO DE SALUD', 
     color: theme.colors.fortalecimientoColor,
-    icon: 'fortalecimiento',
-    description: 'Transferencia de experiencias a través de documentación y capacitación'
+    icon: 'Fortalecimiento de redes y lugares de memoria',
+    description: 'Se crearán redes a nivel local, regional y nacional para compartir y fortalecer las experiencias de memoria'
   },
   { 
     id: 'promocion', 
-    name: 'Promoción y fortalecimiento', 
+    name: 'Museología territorial comunitaria', 
     color: theme.colors.promocionColor,
     icon: 'promocion',
-    description: 'De la vida y dignidad de las personas'
+    description: 'Se implementará un proceso de museología que contemple las necesidades y la historia de la comunidad.'
   },
   { 
     id: 'museologia', 
-    name: 'Museología Territorial', 
+    name: 'Archivo', 
     color: theme.colors.museologiaColor,
-    icon: 'museologia',
-    description: 'Promoción y realización de procesos de investigación con comunidades indígenas'
+    icon: 'Articulación Interinstitucional',
+    description: 'Se desarrollará un archivo que centralice y organice la información relevante para la memoria histórica.'
   },
   { 
     id: 'articulacion', 
-    name: 'Articulación Interinstitucional', 
+    name: 'Adecuación de espacios', 
     color: theme.colors.articulacionColor,
     icon: 'articulacion',
-    description: 'Promoción de espacios de diálogo'
-  },
-  { 
-    id: 'archivo', 
-    name: 'Archivo y memoria histórica', 
-    color: theme.colors.archivoColor,
-    icon: 'archivo',
-    description: 'Registro de la región'
+    description: 'Se realizarán adecuaciones físicas en los espacios destinados a la memoria para facilitar su uso y acceso'
   }
 ];
